@@ -13,6 +13,7 @@ public class PlayerSimpleMovement : MonoBehaviour
     [SerializeField]
     private PhysicMaterial stoppingMat, movingMat;
 
+    private bool pressedJump;
     private new Rigidbody rigidbody;
     private Vector2 input;
     private new CapsuleCollider collider;
@@ -22,16 +23,17 @@ public class PlayerSimpleMovement : MonoBehaviour
         rigidbody = GetComponent<Rigidbody>();
         collider = GetComponent<CapsuleCollider>();
     }
-
+    
+//if (axisH != 0) { movementVector.x = axisH* speed;}
+//if (axisV != 0) { movementVector.z = axisV* speed; }
+//if (axisH == 0) { movementVector.x -= (body.velocity.x* movementDamp); }
+//if (axisV == 0) { movementVector.z -= (body.velocity.z* movementDamp); }
     private void FixedUpdate()
     {
         var inputDir = new Vector3(input.x, 0, input.y);
         inputDir = inputDir.normalized;
-        if (rigidbody.velocity.magnitude < maxSpeed)
-        {
-            rigidbody.AddForce(inputDir * accelerationForce, ForceMode.Acceleration);
-        }
-        if (Input.GetKeyDown(KeyCode.Space))
+            rigidbody.AddForce(inputDir * accelerationForce);
+        if (pressedJump == true)
         {
             rigidbody.AddForce(new Vector3(0, jumpHeight, 0), ForceMode.Impulse);
         }
@@ -41,5 +43,6 @@ public class PlayerSimpleMovement : MonoBehaviour
     {
         input.x = Input.GetAxisRaw("Horizontal");
         input.y = Input.GetAxisRaw("Vertical");
+        pressedJump = Input.GetKeyDown(KeyCode.Space);
     }
 }
