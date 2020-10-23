@@ -18,15 +18,27 @@ public class CharacterControllerScript : MonoBehaviour
     private void Start()
     {
         characterController = GetComponent<CharacterController>();
+        moveDirection = new Vector3(0f, 0f, 0f);
     }
 
     // Update is called once per frame
     void Update()
     {
+        //takes in input to know where the player is moving
         float xMovement = Input.GetAxisRaw("Horizontal");
         float yMovement = Input.GetAxisRaw("Vertical");
 
-        moveDirection = new Vector3(xMovement * moveSpeed, moveDirection.y, yMovement * moveSpeed);
+        //technical debt. stores y direction so we can use it later after reseting the ground movement
+        float yStorage = moveDirection.y;
+
+        //makes a vector 3 for player movement
+        moveDirection = new Vector3(xMovement, 0f, yMovement);
+        //normalizes the move vector so moving diagonally is the same speed
+        moveDirection = moveDirection.normalized;
+        //multiplies move vector by move speed to get the desired speed
+        moveDirection = moveDirection * moveSpeed;
+        //adds our y back onto the move vector so we can retain momentum
+        moveDirection.y = yStorage;
 
         if (characterController.isGrounded)
         {
@@ -37,7 +49,7 @@ public class CharacterControllerScript : MonoBehaviour
         }
         
 
-        moveDirection.y += (Physics.gravity.y * gravityScale);
+        moveDirection.y += (Physics.gravity.y * gravityScale * Time.deltaTime);
         characterController.Move(moveDirection * Time.deltaTime);
     }
 }
