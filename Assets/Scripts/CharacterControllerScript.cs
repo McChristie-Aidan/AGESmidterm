@@ -28,6 +28,8 @@ public class CharacterControllerScript : MonoBehaviour
         float xMovement = Input.GetAxisRaw("Horizontal");
         float yMovement = Input.GetAxisRaw("Vertical");
 
+        //Camera.main.transform
+
         //technical debt. stores y direction so we can use it later after reseting the ground movement
         float yStorage = moveDirection.y;
 
