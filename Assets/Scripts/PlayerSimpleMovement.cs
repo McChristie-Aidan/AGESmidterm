@@ -9,7 +9,7 @@ public class PlayerSimpleMovement : MonoBehaviour
     [SerializeField]
     private float maxSpeed = 2;
     [SerializeField]
-    private float jumpHeight = 7;
+    private float jumpHeight = 10;
     [SerializeField]
     private PhysicMaterial stoppingMat, movingMat;
 
