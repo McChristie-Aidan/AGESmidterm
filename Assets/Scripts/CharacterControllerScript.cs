@@ -5,9 +5,11 @@ using UnityEngine;
 public class CharacterControllerScript : MonoBehaviour
 {
     [SerializeField]
-    private float jumpHeight = 7;
+    private float jumpHeight = 10f;
     [SerializeField]
-    private float moveSpeed = 10;
+    private float moveSpeed = 10f;
+    [SerializeField]
+    private float gravityScale = 1f;
 
     private Vector3 moveDirection;
 
@@ -24,11 +26,18 @@ public class CharacterControllerScript : MonoBehaviour
         float xMovement = Input.GetAxisRaw("Horizontal");
         float yMovement = Input.GetAxisRaw("Vertical");
 
-        moveDirection = new Vector3(xMovement * moveSpeed, 0f, yMovement);
+        moveDirection = new Vector3(xMovement * moveSpeed, moveDirection.y, yMovement * moveSpeed);
 
-        //if (Jump)
-        //{
-        //    moveDirection 
-        //}
+        if (characterController.isGrounded)
+        {
+            if (Input.GetButtonDown("Jump"))
+            {
+                moveDirection.y = jumpHeight;
+            }
+        }
+        
+
+        moveDirection.y += (Physics.gravity.y * gravityScale);
+        characterController.Move(moveDirection * Time.deltaTime);
     }
 }
