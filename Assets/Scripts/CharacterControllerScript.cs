@@ -13,6 +13,12 @@ public class CharacterControllerScript : MonoBehaviour
 
     private Vector3 moveDirection;
 
+    public Vector3 MoveDirection
+    {
+        get { return moveDirection; }
+        set { moveDirection = value;  }
+    }
+
     CharacterController characterController;
 
     private void Start()
