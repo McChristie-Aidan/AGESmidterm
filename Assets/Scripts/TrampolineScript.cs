@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class TrampolineScript : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField]
+    private float bounceHeight = 20;
 
-    // Update is called once per frame
-    void Update()
+    private void OnCollisionEnter(Collision collision)
     {
-        
+        if (collision.transform.tag == "Player")
+        {
+            CharacterControllerScript player = collision.gameObject.GetComponent<CharacterControllerScript>();
+            player.MoveDirectionY = player.MoveDirectionY + bounceHeight;
+        }
     }
 }

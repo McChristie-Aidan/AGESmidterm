@@ -6,6 +6,12 @@ public class CharacterControllerScript : MonoBehaviour
 {
     [SerializeField]
     private float jumpHeight = 10f;
+
+    public float JumpHeight
+    {
+        get { return jumpHeight; }
+    }
+
     [SerializeField]
     private float moveSpeed = 10f;
     [SerializeField]
@@ -13,10 +19,10 @@ public class CharacterControllerScript : MonoBehaviour
 
     private Vector3 moveDirection;
 
-    public Vector3 MoveDirection
+    public float MoveDirectionY
     {
-        get { return moveDirection; }
-        set { moveDirection = value;  }
+        get { return moveDirection.y; }
+        set { moveDirection.y = value;  }
     }
 
     CharacterController characterController;
