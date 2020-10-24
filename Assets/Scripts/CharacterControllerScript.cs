@@ -6,12 +6,24 @@ public class CharacterControllerScript : MonoBehaviour
 {
     [SerializeField]
     private float jumpHeight = 10f;
+
+    public float JumpHeight
+    {
+        get { return jumpHeight; }
+    }
+
     [SerializeField]
     private float moveSpeed = 10f;
     [SerializeField]
     private float gravityScale = 1f;
 
     private Vector3 moveDirection;
+
+    public float MoveDirectionY
+    {
+        get { return moveDirection.y; }
+        set { moveDirection.y = value;  }
+    }
 
     CharacterController characterController;
 
@@ -28,6 +40,10 @@ public class CharacterControllerScript : MonoBehaviour
         float xMovement = Input.GetAxisRaw("Horizontal");
         float yMovement = Input.GetAxisRaw("Vertical");
 
+        Vector3 cameraFlattenedForward = Camera.main.transform.forward;
+        cameraFlattenedForward.y = 0;
+        var cameraRotation = Quaternion.LookRotation(cameraFlattenedForward);
+
         //technical debt. stores y direction so we can use it later after reseting the ground movement
         float yStorage = moveDirection.y;
 
@@ -40,6 +56,7 @@ public class CharacterControllerScript : MonoBehaviour
         //adds our y back onto the move vector so we can retain momentum
         moveDirection.y = yStorage;
 
+        moveDirection = cameraRotation * moveDirection;
         if (characterController.isGrounded)
         {
             if (Input.GetButtonDown("Jump"))
@@ -47,9 +64,9 @@ public class CharacterControllerScript : MonoBehaviour
                 moveDirection.y = jumpHeight;
             }
         }
-        
+
 
         moveDirection.y += (Physics.gravity.y * gravityScale * Time.deltaTime);
-        characterController.Move(moveDirection * Time.deltaTime);
+        characterController.Move((moveDirection) * Time.deltaTime);
     }
 }
