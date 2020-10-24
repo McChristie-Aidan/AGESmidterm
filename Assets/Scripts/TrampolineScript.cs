@@ -7,12 +7,13 @@ public class TrampolineScript : MonoBehaviour
     [SerializeField]
     private float bounceHeight = 20;
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.transform.tag == "Player")
+        Debug.Log("bounced on trampoline");
+        if (other.gameObject.transform.tag == "Player")
         {
-            CharacterControllerScript player = collision.gameObject.GetComponent<CharacterControllerScript>();
-            player.MoveDirectionY = player.MoveDirectionY + bounceHeight;
+            CharacterControllerScript player = other.gameObject.GetComponent<CharacterControllerScript>();
+            player.MoveDirectionY = bounceHeight;
         }
     }
 }
