@@ -50,15 +50,14 @@ public class CrouchJump : MonoBehaviour
                 chargeTime = maxJumpHeight;
             }
             Debug.Log(chargeTime);
+            if (Input.GetButtonDown("Jump"))
+            {
+                player.MoveDirectionY = chargeTime;
+            }
         }
         else
         {
             chargeTime = 0f;
-        }
-        //allows for the release of the super jump.
-        if (Input.GetButtonDown("Jump"))
-        {
-            player.MoveDirectionY = chargeTime;
         }
     }
 
