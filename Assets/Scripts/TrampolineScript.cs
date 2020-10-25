@@ -9,7 +9,7 @@ public class TrampolineScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("bounced on trampoline");
+        //Debug.Log("bounced on trampoline");
         if (other.gameObject.transform.tag == "Player")
         {
             CharacterControllerScript player = other.gameObject.GetComponent<CharacterControllerScript>();

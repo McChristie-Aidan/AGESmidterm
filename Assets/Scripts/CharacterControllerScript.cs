@@ -7,11 +7,16 @@ public class CharacterControllerScript : MonoBehaviour
     [SerializeField]
     private float jumpHeight = 10f;
     [SerializeField]
+    private float doubleJumpScale = 1f;
+    [SerializeField]
     private float moveSpeed = 10f;
+    [SerializeField]
+    private float sprintScale = 2;
     [SerializeField]
     private float gravityScale = 1f;
 
     private bool hasDoubleJump;
+    private bool isSprinting;
     private Vector3 moveDirection;
 
     public float MoveDirectionY
@@ -31,10 +36,60 @@ public class CharacterControllerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        MovementCalculations();
+
+        CheckForJumps();
+
+        if (characterController.isGrounded == false)
+        {
+            moveDirection.y += (Physics.gravity.y * gravityScale * Time.deltaTime);
+        }
+        else
+        {
+            if (moveDirection.y < -1)
+            {
+                moveDirection.y += 1f;
+            }
+        }
+
+        Debug.Log("MoveDirection.Y = " + moveDirection.y);
+        characterController.Move((moveDirection) * Time.deltaTime);
+    }
+
+    private void CheckForJumps()
+    {
+        //checks for jumps off the ground
+        if (characterController.isGrounded)
+        {
+            hasDoubleJump = true;
+            if (Input.GetButtonDown("Jump"))
+            {
+                moveDirection.y = jumpHeight;
+
+            }
+        }
+
+        //checks for double jumps
+        if (characterController.isGrounded == false)
+        {
+            if (hasDoubleJump)
+            {
+                if (Input.GetButtonDown("Jump"))
+                {
+                    hasDoubleJump = false;
+                    moveDirection.y = jumpHeight * doubleJumpScale;
+
+                }
+            }
+        }
+    }
+    private void MovementCalculations()
+    {
         //takes in input to know where the player is moving
         float xMovement = Input.GetAxisRaw("Horizontal");
         float yMovement = Input.GetAxisRaw("Vertical");
 
+        //finds which way the camera is facing.
         Vector3 cameraFlattenedForward = Camera.main.transform.forward;
         cameraFlattenedForward.y = 0;
         var cameraRotation = Quaternion.LookRotation(cameraFlattenedForward);
@@ -47,36 +102,32 @@ public class CharacterControllerScript : MonoBehaviour
         //normalizes the move vector so moving diagonally is the same speed
         moveDirection = moveDirection.normalized;
         //multiplies move vector by move speed to get the desired speed
-        moveDirection = moveDirection * moveSpeed;
+        moveDirection = moveDirection * moveSpeed * CheckForSprint();
         //adds our y back onto the move vector so we can retain momentum
         moveDirection.y = yStorage;
-
+        //rotates movement relevant to the camera
         moveDirection = cameraRotation * moveDirection;
+    }
 
-        if (characterController.isGrounded)
+    private float CheckForSprint()
+    {
+        if (Input.GetButtonDown("Sprint") && characterController.isGrounded)
         {
-            hasDoubleJump = true;
-            if (Input.GetButtonDown("Jump"))
-            {
-                moveDirection.y = jumpHeight;
-
-            }
+            isSprinting = true;
         }
 
-        if (characterController.isGrounded == false)
+        if (Input.GetAxisRaw("Vertical") == 0f && Input.GetAxisRaw("Horizontal") == 0f)
         {
-            if (hasDoubleJump)
-            {
-                if (Input.GetButtonDown("Jump"))
-                {
-                    hasDoubleJump = false;
-                    moveDirection.y = jumpHeight;
-
-                }
-            }
+            isSprinting = false;
         }
 
-        moveDirection.y += (Physics.gravity.y * gravityScale * Time.deltaTime);
-        characterController.Move((moveDirection) * Time.deltaTime);
+        if (isSprinting)
+        {
+            return sprintScale;
+        }
+        else
+        {
+            return 1;
+        }
     }
 }
