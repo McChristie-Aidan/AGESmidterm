@@ -6,17 +6,12 @@ public class CharacterControllerScript : MonoBehaviour
 {
     [SerializeField]
     private float jumpHeight = 10f;
-
-    public float JumpHeight
-    {
-        get { return jumpHeight; }
-    }
-
     [SerializeField]
     private float moveSpeed = 10f;
     [SerializeField]
     private float gravityScale = 1f;
 
+    private bool hasDoubleJump;
     private Vector3 moveDirection;
 
     public float MoveDirectionY
@@ -57,11 +52,27 @@ public class CharacterControllerScript : MonoBehaviour
         moveDirection.y = yStorage;
 
         moveDirection = cameraRotation * moveDirection;
+
         if (characterController.isGrounded)
         {
+            hasDoubleJump = true;
             if (Input.GetButtonDown("Jump"))
             {
                 moveDirection.y = jumpHeight;
+
+            }
+        }
+
+        if (characterController.isGrounded == false)
+        {
+            if (hasDoubleJump)
+            {
+                if (Input.GetButtonDown("Jump"))
+                {
+                    hasDoubleJump = false;
+                    moveDirection.y = jumpHeight;
+
+                }
             }
         }
 
