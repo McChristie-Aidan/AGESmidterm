@@ -162,7 +162,7 @@ public class CharacterControllerScript : MonoBehaviour
     //technical debt maybe refactor this into a utility script
     public bool IsMoving()
     {
-        if (Input.GetAxisRaw("Vertical") != 0f && Input.GetAxisRaw("Horizontal") != 0f)
+        if (Input.GetAxisRaw("Vertical") != 0f || Input.GetAxisRaw("Horizontal") != 0f)
         {
             return true;
         }
