@@ -15,6 +15,7 @@ public class TrampolineScript : MonoBehaviour
             CharacterControllerScript player = other.gameObject.GetComponent<CharacterControllerScript>();
 
             player.MoveDirectionY = bounceHeight;
+            player.createParticles();
         }
     }
 }

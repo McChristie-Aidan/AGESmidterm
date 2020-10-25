@@ -17,6 +17,11 @@ public class CharacterControllerScript : MonoBehaviour
     private float gravityScale = 1f;
     [SerializeField]
     private float gravityIncrement = .01f;
+    //technical debt needs refactoring 
+    [SerializeField]
+    private ParticleSystem particleSource;
+    [SerializeField]
+    private float fallingParticleThreshold = -50f;
 
     //script only variables 
     private bool hasDoubleJump;
@@ -34,12 +39,16 @@ public class CharacterControllerScript : MonoBehaviour
     //objects
     CharacterController characterController;
     CrouchJump crouchJump;
+    //needs to be refactored
+    ParticleSystem partSys;
 
     private void Start()
     {
         //gets the other components we need
         characterController = GetComponent<CharacterController>();
         crouchJump = GetComponent<CrouchJump>();
+        // needs to be refactored
+        partSys = particleSource.GetComponent<ParticleSystem>();
 
         //initializes variables
         moveDirection = new Vector3(0f, 0f, 0f);
@@ -53,6 +62,11 @@ public class CharacterControllerScript : MonoBehaviour
         if (crouchJump.IsCrouching == false)
         {
             CheckForJumps();
+        }
+
+        if (characterController.isGrounded && isSprinting == true)
+        {
+            particleSource.Play();
         }
 
         //ensures the player isn't constantly gaining downword momentum on the ground
@@ -70,11 +84,15 @@ public class CharacterControllerScript : MonoBehaviour
             if (moveDirection.y < 0)
             {
                 gravityScale += gravityIncrement;
+                if (moveDirection.y < fallingParticleThreshold)
+                {
+                    particleSource.Play();
+                }
             }
             moveDirection.y += (Physics.gravity.y * gravityScale * Time.deltaTime);
         }
 
-        //Debug.Log("MoveDirection.Y = " + moveDirection.y);
+        Debug.Log("MoveDirection.Y = " + moveDirection.y);
         characterController.Move((moveDirection) * Time.deltaTime);
     }
 
@@ -87,6 +105,7 @@ public class CharacterControllerScript : MonoBehaviour
             if (Input.GetButtonDown("Jump"))
             {
                 moveDirection.y = jumpHeight;
+                createParticles();
 
             }
         }
@@ -100,7 +119,7 @@ public class CharacterControllerScript : MonoBehaviour
                 {
                     hasDoubleJump = false;
                     moveDirection.y = jumpHeight * doubleJumpScale;
-
+                    createParticles();
                 }
             }
         }
@@ -170,5 +189,15 @@ public class CharacterControllerScript : MonoBehaviour
         {
             return false;
         }
+    }
+    //technical debt this should be its own class
+    public void createParticles()
+    {
+        //partSys.Stop();
+
+        //var particleDuration = partSys.main;
+        //particleDuration.duration = duration;
+
+        partSys.Play();
     }
 }

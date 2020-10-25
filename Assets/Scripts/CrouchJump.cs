@@ -53,6 +53,7 @@ public class CrouchJump : MonoBehaviour
             if (Input.GetButtonDown("Jump"))
             {
                 player.MoveDirectionY = chargeTime;
+                player.createParticles();
             }
         }
         else
