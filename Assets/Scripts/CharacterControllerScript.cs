@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CharacterControllerScript : MonoBehaviour
 {
+    //editor variables
     [SerializeField]
     private float jumpHeight = 10f;
     [SerializeField]
@@ -17,22 +18,30 @@ public class CharacterControllerScript : MonoBehaviour
     [SerializeField]
     private float gravityIncrement = .01f;
 
+    //script only variables 
     private bool hasDoubleJump;
     private bool isSprinting;
     private float origialGravity;
     private Vector3 moveDirection;
 
+    //get sets
     public float MoveDirectionY
     {
         get { return moveDirection.y; }
         set { moveDirection.y = value;  }
     }
 
+    //objects
     CharacterController characterController;
+    CrouchJump crouchJump;
 
     private void Start()
     {
+        //gets the other components we need
         characterController = GetComponent<CharacterController>();
+        crouchJump = GetComponent<CrouchJump>();
+
+        //initializes variables
         moveDirection = new Vector3(0f, 0f, 0f);
         origialGravity = gravityScale;
     }
@@ -41,8 +50,10 @@ public class CharacterControllerScript : MonoBehaviour
     void Update()
     {
         MovementCalculations();
-
-        CheckForJumps();
+        if (crouchJump.IsCrouching == false)
+        {
+            CheckForJumps();
+        }
 
         //ensures the player isn't constantly gaining downword momentum on the ground
         if (characterController.isGrounded)
@@ -113,7 +124,15 @@ public class CharacterControllerScript : MonoBehaviour
         //normalizes the move vector so moving diagonally is the same speed
         moveDirection = moveDirection.normalized;
         //multiplies move vector by move speed to get the desired speed
-        moveDirection = moveDirection * moveSpeed * CheckForSprint();
+        if (crouchJump.IsCrouching)
+        {
+            isSprinting = false;
+            moveDirection = moveDirection * moveSpeed * crouchJump.SpeedReduction;
+        }
+        else
+        {
+            moveDirection = moveDirection * moveSpeed * CheckForSprint();
+        }
         //adds our y back onto the move vector so we can retain momentum
         moveDirection.y = yStorage;
         //rotates movement relevant to the camera
@@ -125,8 +144,8 @@ public class CharacterControllerScript : MonoBehaviour
         {
             isSprinting = true;
         }
-
-        if (Input.GetAxisRaw("Vertical") == 0f && Input.GetAxisRaw("Horizontal") == 0f)
+        //technical debt need to refactor this
+        if (IsMoving() != true)
         {
             isSprinting = false;
         }
@@ -138,6 +157,18 @@ public class CharacterControllerScript : MonoBehaviour
         else
         {
             return 1;
+        }
+    }
+    //technical debt maybe refactor this into a utility script
+    public bool IsMoving()
+    {
+        if (Input.GetAxisRaw("Vertical") != 0f && Input.GetAxisRaw("Horizontal") != 0f)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }
