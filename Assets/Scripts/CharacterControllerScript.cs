@@ -14,9 +14,12 @@ public class CharacterControllerScript : MonoBehaviour
     private float sprintScale = 2;
     [SerializeField]
     private float gravityScale = 1f;
+    [SerializeField]
+    private float gravityIncrement = .01f;
 
     private bool hasDoubleJump;
     private bool isSprinting;
+    private float origialGravity;
     private Vector3 moveDirection;
 
     public float MoveDirectionY
@@ -31,6 +34,7 @@ public class CharacterControllerScript : MonoBehaviour
     {
         characterController = GetComponent<CharacterController>();
         moveDirection = new Vector3(0f, 0f, 0f);
+        origialGravity = gravityScale;
     }
 
     // Update is called once per frame
@@ -40,16 +44,23 @@ public class CharacterControllerScript : MonoBehaviour
 
         CheckForJumps();
 
-        if (characterController.isGrounded == false)
+        //ensures the player isn't constantly gaining downword momentum on the ground
+        if (characterController.isGrounded)
         {
-            moveDirection.y += (Physics.gravity.y * gravityScale * Time.deltaTime);
+            gravityScale = origialGravity;
+            if (moveDirection.y < -.5)
+            {
+                moveDirection.y -= moveDirection.y;
+            }
         }
+        //applies gravity once the player leaves the ground
         else
         {
-            if (moveDirection.y < -1)
+            if (moveDirection.y < 0)
             {
-                moveDirection.y += 1f;
+                gravityScale += gravityIncrement;
             }
+            moveDirection.y += (Physics.gravity.y * gravityScale * Time.deltaTime);
         }
 
         Debug.Log("MoveDirection.Y = " + moveDirection.y);
@@ -108,7 +119,6 @@ public class CharacterControllerScript : MonoBehaviour
         //rotates movement relevant to the camera
         moveDirection = cameraRotation * moveDirection;
     }
-
     private float CheckForSprint()
     {
         if (Input.GetButtonDown("Sprint") && characterController.isGrounded)

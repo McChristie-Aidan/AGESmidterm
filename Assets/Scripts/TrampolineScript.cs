@@ -13,6 +13,7 @@ public class TrampolineScript : MonoBehaviour
         if (other.gameObject.transform.tag == "Player")
         {
             CharacterControllerScript player = other.gameObject.GetComponent<CharacterControllerScript>();
+
             player.MoveDirectionY = bounceHeight;
         }
     }
