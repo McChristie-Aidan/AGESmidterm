@@ -16,7 +16,7 @@ public class CharacterControllerScript : MonoBehaviour
     [SerializeField]
     private float gravityScale = 1f;
     [SerializeField]
-    private float gravityIncrement = .01f;
+    private float fallingGravity = 6;
     //technical debt needs refactoring 
     [SerializeField]
     private ParticleSystem particleSource;
@@ -83,7 +83,7 @@ public class CharacterControllerScript : MonoBehaviour
         {
             if (moveDirection.y < 0)
             {
-                gravityScale += gravityIncrement;
+                gravityScale = fallingGravity;
                 if (moveDirection.y < fallingParticleThreshold)
                 {
                     particleSource.Play();
