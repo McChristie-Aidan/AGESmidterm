@@ -92,7 +92,7 @@ public class CharacterControllerScript : MonoBehaviour
             moveDirection.y += (Physics.gravity.y * gravityScale * Time.deltaTime);
         }
 
-        Debug.Log("MoveDirection.Y = " + moveDirection.y);
+        //Debug.Log("MoveDirection.Y = " + moveDirection.y);
         characterController.Move((moveDirection) * Time.deltaTime);
     }
 

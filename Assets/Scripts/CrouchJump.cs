@@ -39,17 +39,24 @@ public class CrouchJump : MonoBehaviour
         CrouchShrink();
         ChargeJump();
     }
-
+    
+    //charges up for a super jump if the player is stationary and crouching
     private void ChargeJump()
     {
+        //runs if the player is on the ground, is not moving, and is in the crouching state 
         if (characterController.isGrounded == true && player.IsMoving() == false && IsCrouching == true)
         {
             chargeTime += chargeSpeed * Time.deltaTime;
+
+            //makes sure the superjump wont be higher than the maximum jump height
             if (chargeTime > maxJumpHeight)
             {
                 chargeTime = maxJumpHeight;
             }
-            Debug.Log(chargeTime);
+
+            //Debug.Log("Current charge = " + chargeTime);
+
+            //makes the player jump however high the current charge is
             if (Input.GetButtonDown("Jump"))
             {
                 player.MoveDirectionY = chargeTime;
@@ -58,10 +65,12 @@ public class CrouchJump : MonoBehaviour
         }
         else
         {
+            //resets the charge to 0 when the player isnt charging
             chargeTime = 0f;
         }
     }
 
+    //smooshes the player when the crouch and then reverses the smooshing when the player stops crouching
     private void CrouchShrink()
     {
         if (Input.GetButtonDown("Crouch") && characterController.isGrounded)
