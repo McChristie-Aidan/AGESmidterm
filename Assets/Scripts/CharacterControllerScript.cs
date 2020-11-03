@@ -73,6 +73,7 @@ public class CharacterControllerScript : MonoBehaviour
         if (characterController.isGrounded)
         {
             gravityScale = origialGravity;
+
             if (moveDirection.y < -.5)
             {
                 moveDirection.y -= moveDirection.y;
@@ -84,6 +85,7 @@ public class CharacterControllerScript : MonoBehaviour
             if (moveDirection.y < 0)
             {
                 gravityScale = fallingGravity;
+
                 if (moveDirection.y < fallingParticleThreshold)
                 {
                     particleSource.Play();
@@ -106,7 +108,6 @@ public class CharacterControllerScript : MonoBehaviour
             {
                 moveDirection.y = jumpHeight;
                 createParticles();
-
             }
         }
 

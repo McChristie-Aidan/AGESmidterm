@@ -8,6 +8,7 @@ public class SceneReset : MonoBehaviour
     [SerializeField]
     private float deathPlaneLevel = -50f;
 
+
     void Update()
     {
         GetButtonReset();
