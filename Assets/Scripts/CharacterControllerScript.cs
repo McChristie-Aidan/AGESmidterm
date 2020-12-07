@@ -71,7 +71,7 @@ public class CharacterControllerScript : MonoBehaviour
         }
 
         ApplyGravity();
-
+        
         //Debug.Log("MoveDirection.Y = " + moveDirection.y);
         characterController.Move((moveDirection) * Time.deltaTime);
     }
@@ -79,7 +79,7 @@ public class CharacterControllerScript : MonoBehaviour
     private void CheckForJumps()
     {
         //checks for jumps off the ground
-        if (characterController.isGrounded)
+        if (characterController.isGrounded && crouchJump.IsCrouching != true)
         {
             hasDoubleJump = true;
             if (Input.GetButtonDown("Jump"))
