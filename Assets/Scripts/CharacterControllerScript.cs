@@ -14,9 +14,9 @@ public class CharacterControllerScript : MonoBehaviour
     [SerializeField]
     private float sprintScale = 2;
     [SerializeField]
-    private float gravityScale = 1f;
+    private float gravityScale = 6f;
     [SerializeField]
-    private float fallingGravity = 6;
+    private float jumpingLowGravity = 4f;
     //technical debt needs refactoring 
     [SerializeField]
     private ParticleSystem particleSource;
@@ -26,8 +26,8 @@ public class CharacterControllerScript : MonoBehaviour
     //script only variables 
     private bool hasDoubleJump;
     private bool isSprinting;
-    private float origialGravity;
     private Vector3 moveDirection;
+    private float originalGravity;
 
     //get sets
     public float MoveDirectionY
@@ -52,13 +52,14 @@ public class CharacterControllerScript : MonoBehaviour
 
         //initializes variables
         moveDirection = new Vector3(0f, 0f, 0f);
-        origialGravity = gravityScale;
+        originalGravity = gravityScale;
     }
 
     // Update is called once per frame
     void Update()
     {
         MovementCalculations();
+
         if (crouchJump.IsCrouching == false)
         {
             CheckForJumps();
@@ -69,30 +70,7 @@ public class CharacterControllerScript : MonoBehaviour
             particleSource.Play();
         }
 
-        //ensures the player isn't constantly gaining downword momentum on the ground
-        if (characterController.isGrounded)
-        {
-            gravityScale = origialGravity;
-
-            if (moveDirection.y < -.5)
-            {
-                moveDirection.y -= moveDirection.y;
-            }
-        }
-        //applies gravity once the player leaves the ground
-        else
-        {
-            if (moveDirection.y < 0)
-            {
-                gravityScale = fallingGravity;
-
-                if (moveDirection.y < fallingParticleThreshold)
-                {
-                    particleSource.Play();
-                }
-            }
-            moveDirection.y += (Physics.gravity.y * gravityScale * Time.deltaTime);
-        }
+        ApplyGravity();
 
         //Debug.Log("MoveDirection.Y = " + moveDirection.y);
         characterController.Move((moveDirection) * Time.deltaTime);
@@ -158,6 +136,7 @@ public class CharacterControllerScript : MonoBehaviour
         //rotates movement relevant to the camera
         moveDirection = cameraRotation * moveDirection;
     }
+
     private float CheckForSprint()
     {
         if (Input.GetButtonDown("Sprint") && characterController.isGrounded)
@@ -177,6 +156,35 @@ public class CharacterControllerScript : MonoBehaviour
         else
         {
             return 1;
+        }
+    }
+    private void ApplyGravity()
+    {
+        //ensures the player isn't constantly gaining downword momentum on the ground
+        if (characterController.isGrounded)
+        {
+            gravityScale = originalGravity;
+            if (moveDirection.y < -.5)
+            {
+                moveDirection.y -= moveDirection.y;
+            }
+        }
+        //applies gravity once the player leaves the ground
+        else
+        {
+            gravityScale = originalGravity;
+            if (moveDirection.y > 0 && Input.GetButton("Jump") == true)
+            {
+                gravityScale = jumpingLowGravity;
+            }
+            if (moveDirection.y < 0)
+            {
+                if (moveDirection.y < fallingParticleThreshold)
+                {
+                    particleSource.Play();
+                }
+            }
+            moveDirection.y += (Physics.gravity.y * gravityScale * Time.deltaTime);
         }
     }
     //technical debt maybe refactor this into a utility script

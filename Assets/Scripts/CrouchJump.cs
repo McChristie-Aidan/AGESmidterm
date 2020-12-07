@@ -54,7 +54,7 @@ public class CrouchJump : MonoBehaviour
                 chargeTime = maxJumpHeight;
             }
 
-            //Debug.Log("Current charge = " + chargeTime);
+            Debug.Log("Current charge = " + chargeTime);
 
             //makes the player jump however high the current charge is
             if (Input.GetButtonDown("Jump"))
