@@ -46,6 +46,7 @@ public class CrouchJump : MonoBehaviour
         //runs if the player is on the ground, is not moving, and is in the crouching state 
         if (characterController.isGrounded == true && player.IsMoving() == false && IsCrouching == true)
         {
+            Debug.Log(IsCrouching);
             chargeTime += chargeSpeed * Time.deltaTime;
 
             //makes sure the superjump wont be higher than the maximum jump height
@@ -54,7 +55,7 @@ public class CrouchJump : MonoBehaviour
                 chargeTime = maxJumpHeight;
             }
 
-            Debug.Log("Current charge = " + chargeTime);
+            //Debug.Log("Current charge = " + chargeTime);
 
             //makes the player jump however high the current charge is
             if (Input.GetButtonDown("Jump"))
