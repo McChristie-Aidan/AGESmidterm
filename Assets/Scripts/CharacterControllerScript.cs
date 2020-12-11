@@ -164,9 +164,9 @@ public class CharacterControllerScript : MonoBehaviour
         if (characterController.isGrounded)
         {
             gravityScale = originalGravity;
-            if (moveDirection.y < -.5)
+            if (moveDirection.y < -1)
             {
-                moveDirection.y -= moveDirection.y;
+                moveDirection.y -= moveDirection.y - 1;
             }
         }
         //applies gravity once the player leaves the ground
@@ -176,8 +176,8 @@ public class CharacterControllerScript : MonoBehaviour
             if (moveDirection.y > 0 && Input.GetButton("Jump") == true)
             {
                 gravityScale = jumpingLowGravity;
-            }
-            if (moveDirection.y < 0)
+            }                    
+            else if (moveDirection.y < 0)
             {
                 if (moveDirection.y < fallingParticleThreshold)
                 {
