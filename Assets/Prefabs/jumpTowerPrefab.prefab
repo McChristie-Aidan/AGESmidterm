@@ -510,7 +510,7 @@ PrefabInstance:
     - target: {fileID: 7075433740847119079, guid: a737be73aab0b4c4580b6fe0d5cad357,
         type: 3}
       propertyPath: bounceHeight
-      value: 45
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 7720754126458420089, guid: a737be73aab0b4c4580b6fe0d5cad357,
         type: 3}
