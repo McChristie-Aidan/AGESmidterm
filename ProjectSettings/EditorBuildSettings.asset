@@ -8,4 +8,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/CCTest.unity
     guid: 8c4dbd35d495dd34a9ebc6fe5ebfc84d
+  - enabled: 1
+    path: Assets/Scenes/Level_1.unity
+    guid: 9ae706f2b8904d04a93148cad2c1bb54
+  - enabled: 1
+    path: Assets/Scenes/Level_2.unity
+    guid: e20f863bef9a0dc4a86f46fa842aac04
+  - enabled: 0
+    path: Assets/Scenes/TestLevel.unity
+    guid: 22012ff856778804eb7900636d8bc5d3
   m_configObjects: {}
