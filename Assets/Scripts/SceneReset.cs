@@ -25,7 +25,7 @@ public class SceneReset : MonoBehaviour
         }
     }
 
-    //resets the level when a certain keyboard key is pressed.
+    //resets the level when a specified keyboard key is pressed.
     private void GetButtonReset()
     {
         if (Input.GetButtonDown("Reset"))
